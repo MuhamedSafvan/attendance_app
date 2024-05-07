@@ -1,11 +1,9 @@
 import 'dart:io';
 
 import 'package:attendance_app/main.dart';
-import 'package:attendance_app/screens/verify_screen.dart';
 import 'package:camera/camera.dart';
 import 'package:face_camera/face_camera.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:image/image.dart' as img;
 
@@ -28,6 +26,7 @@ class _PreviewScreenState extends State<PreviewScreen> {
 
   @override
   void initState() {
+    print("totalTries $totalTries");
     // TODO: implement initState
     super.initState();
     _faceDetector = FaceDetector(options: FaceDetectorOptions());
@@ -117,7 +116,6 @@ class _PreviewScreenState extends State<PreviewScreen> {
                   builder: (context) => const CameraScreen(),
                 ),
               );
-
             },
             icon: const Icon(Icons.arrow_back_ios_new),
           ),
@@ -177,6 +175,9 @@ class _PreviewScreenState extends State<PreviewScreen> {
                                     backgroundColor: primaryColor,
                                     foregroundColor: Colors.white),
                                 onPressed: () {
+
+                                  //Add the logic to send the photo to backend URL
+                                  
                                   Navigator.pushReplacement(
                                     context,
                                     MaterialPageRoute(
@@ -226,43 +227,72 @@ class _PreviewScreenState extends State<PreviewScreen> {
                           const SizedBox(
                             height: 10,
                           ),
-                          Container(
-                            height: 50,
-                            margin: const EdgeInsets.symmetric(horizontal: 10)
-                                .copyWith(bottom: 10, top: 5),
-                            // padding: const EdgeInsets.symmetric(horizontal: 10),
-                            width: size.width * .4,
-                            child: ElevatedButton.icon(
-                                icon: Image.asset(
-                                  'assets/images/refresh_icon.png',
-                                  height: 18,
-                                  width: 16,
-                                  color: primaryColor,
-                                ),
-                                style: ElevatedButton.styleFrom(
-                                    shape: RoundedRectangleBorder(
-                                      side:
-                                          const BorderSide(color: primaryColor),
-                                      borderRadius: BorderRadius.circular(15),
-                                    ),
-                                    backgroundColor: Colors.white,
-                                    foregroundColor: primaryColor),
-                                onPressed: () {
-                                  Navigator.pushReplacement(
-                                      context,
-                                      MaterialPageRoute(
-                                        builder: (context) =>
-                                            const CameraScreen(),
-                                      ));
-                                },
-                                label: Text(
-                                  'Re-Take',
-                                  style: GoogleFonts.montserrat(
-                                      color: primaryColor,
-                                      fontSize: 16,
-                                      fontWeight: FontWeight.w500),
-                                )),
-                          ),
+                          if (totalTries > 0)
+                            Padding(
+                              padding:
+                                  const EdgeInsets.symmetric(horizontal: 80.0),
+                              child: Text(
+                                "Don't Worry, your request for Attendance has been sent to the Head for approval!",
+                                textAlign: TextAlign.center,
+                                style: GoogleFonts.montserrat(
+                                    fontSize: 12,
+                                    fontWeight: FontWeight.w400,
+                                    color: Colors.black),
+                              ),
+                            ),
+                          if (totalTries > 0)
+                            Padding(
+                              padding:
+                                  const EdgeInsets.symmetric(horizontal: 80.0)
+                                      .copyWith(top: 20),
+                              child: Text(
+                                "Go to Dashboard and continue with your tasks for the day once your attendance is approved.",
+                                textAlign: TextAlign.center,
+                                style: GoogleFonts.montserrat(
+                                    fontSize: 10,
+                                    fontWeight: FontWeight.w500,
+                                    color: Colors.black),
+                              ),
+                            ),
+                          if (totalTries == 0)
+                            Container(
+                              height: 50,
+                              margin: const EdgeInsets.symmetric(horizontal: 10)
+                                  .copyWith(bottom: 10, top: 5),
+                              // padding: const EdgeInsets.symmetric(horizontal: 10),
+                              width: size.width * .4,
+                              child: ElevatedButton.icon(
+                                  icon: Image.asset(
+                                    'assets/images/refresh_icon.png',
+                                    height: 18,
+                                    width: 16,
+                                    color: primaryColor,
+                                  ),
+                                  style: ElevatedButton.styleFrom(
+                                      shape: RoundedRectangleBorder(
+                                        side: const BorderSide(
+                                            color: primaryColor),
+                                        borderRadius: BorderRadius.circular(15),
+                                      ),
+                                      backgroundColor: Colors.white,
+                                      foregroundColor: primaryColor),
+                                  onPressed: () {
+                                    totalTries++;
+                                    Navigator.pushReplacement(
+                                        context,
+                                        MaterialPageRoute(
+                                          builder: (context) =>
+                                              const CameraScreen(),
+                                        ));
+                                  },
+                                  label: Text(
+                                    'Re-Take',
+                                    style: GoogleFonts.montserrat(
+                                        color: primaryColor,
+                                        fontSize: 16,
+                                        fontWeight: FontWeight.w500),
+                                  )),
+                            ),
                           const Spacer(),
                           const Divider(),
                           Container(
@@ -276,11 +306,13 @@ class _PreviewScreenState extends State<PreviewScreen> {
                                     shape: RoundedRectangleBorder(
                                       borderRadius: BorderRadius.circular(15),
                                     ),
-                                    backgroundColor: Colors.transparent,
+                                    backgroundColor: totalTries > 0
+                                        ? primaryColor
+                                        : Colors.transparent,
                                     foregroundColor: Colors.white),
                                 onPressed: () {},
                                 child: Text(
-                                  'Submit',
+                                  totalTries > 0 ? 'Go to Dashboard' : 'Submit',
                                   style: GoogleFonts.montserrat(
                                       color: Colors.white,
                                       fontSize: 16,
@@ -351,38 +383,40 @@ class _PreviewScreenState extends State<PreviewScreen> {
                             ],
                           ),
                           const Spacer(),
-                          SizedBox(
-                            width: 150,
-                            height: 50,
-                            child: ElevatedButton.icon(
-                                icon: Image.asset(
-                                  'assets/images/refresh_icon.png',
-                                  height: 18,
-                                  width: 16,
-                                ),
-                                style: ElevatedButton.styleFrom(
-                                    shape: RoundedRectangleBorder(
-                                      borderRadius: BorderRadius.circular(15),
-                                    ),
-                                    backgroundColor: primaryColor,
-                                    foregroundColor: Colors.white),
-                                onPressed: () {
-                                  Navigator.pushReplacement(
-                                    context,
-                                    MaterialPageRoute(
-                                      builder: (context) =>
-                                          const CameraScreen(),
-                                    ),
-                                  );
-                                },
-                                label: Text(
-                                  'Re-Take',
-                                  style: GoogleFonts.montserrat(
-                                      color: Colors.white,
-                                      fontSize: 16,
-                                      fontWeight: FontWeight.w500),
-                                )),
-                          ),
+                            SizedBox(
+                              width: 150,
+                              height: 50,
+                              child: ElevatedButton.icon(
+                                  icon: Image.asset(
+                                    'assets/images/refresh_icon.png',
+                                    height: 18,
+                                    width: 16,
+                                  ),
+                                  style: ElevatedButton.styleFrom(
+                                      shape: RoundedRectangleBorder(
+                                        borderRadius: BorderRadius.circular(15),
+                                      ),
+                                      backgroundColor: primaryColor,
+                                      foregroundColor: Colors.white),
+                                  onPressed: () {
+                                    totalTries++;
+
+                                    Navigator.pushReplacement(
+                                      context,
+                                      MaterialPageRoute(
+                                        builder: (context) =>
+                                            const CameraScreen(),
+                                      ),
+                                    );
+                                  },
+                                  label: Text(
+                                    'Re-Take',
+                                    style: GoogleFonts.montserrat(
+                                        color: Colors.white,
+                                        fontSize: 16,
+                                        fontWeight: FontWeight.w500),
+                                  )),
+                            ),
                           const SizedBox(
                             height: 50,
                           )

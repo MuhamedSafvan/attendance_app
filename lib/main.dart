@@ -7,6 +7,8 @@ List<CameraDescription> cameras = [];
 
 final GlobalKey<NavigatorState> navigatorKey = GlobalKey<NavigatorState>();
 
+int totalTries = 0;
+
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   cameras = await availableCameras();
