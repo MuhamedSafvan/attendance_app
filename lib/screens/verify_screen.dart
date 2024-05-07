@@ -73,7 +73,7 @@ class VerifyScreen extends StatelessWidget {
                     backgroundColor: primaryColor,
                     foregroundColor: Colors.white),
                 onPressed: () {
-                  Navigator.push(
+                  Navigator.pushReplacement(
                       context,
                       MaterialPageRoute(
                         builder: (context) => CameraScreen(),

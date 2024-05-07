@@ -139,7 +139,7 @@ class _CameraScreenState extends State<CameraScreen> {
       //   hasEnoughLight = hasLight;
       // });
       if (_image != null) {
-        Navigator.push(
+        Navigator.pushReplacement(
             context,
             MaterialPageRoute(
               builder: (context) => PreviewScreen(image: _image!),
@@ -157,183 +157,193 @@ class _CameraScreenState extends State<CameraScreen> {
     if (!controller.value.isInitialized) {
       return Container();
     }
-    return Scaffold(
-      appBar: AppBar(
-        leading: IconButton(
-          onPressed: () {
-            Navigator.pushAndRemoveUntil(
-              context,
-              MaterialPageRoute(
-                builder: (context) => const VerifyScreen(),
-              ),
-              (route) => false,
-            );
-          },
-          icon: const Icon(Icons.arrow_back_ios_new),
-        ),
-        title: Text(
-          'Face Verification',
-          style: GoogleFonts.encodeSansExpanded(
-              fontSize: 16, fontWeight: FontWeight.w600),
-        ),
-      ),
-      body: SizedBox(
-        height: double.infinity,
-        child:
-            // _image != null
-            //     ? Stack(
-            //         children: [
-            //           SizedBox(
-            //             height: double.infinity,
-            //             child: Transform.flip(
-            //                 flipX: true,
-            //                 child: Image.file(
-            //                   File(_image!.path),
-            //                   fit: BoxFit.cover,
-            //                 )),
-            //           ),
-            //           Container(
-            //             decoration: const BoxDecoration(
-            //                 color: Color.fromRGBO(0, 0, 0, 0.6)),
-            //             height: double.infinity,
-            //             width: double.infinity,
-            //           ),
-            //           Column(
-            //             crossAxisAlignment: CrossAxisAlignment.center,
-            //             // mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-            //             children: [
-            //               const SizedBox(
-            //                 height: 35,
-            //               ),
-            //               Text(
-            //                 'Please try again with better lighting',
-            //                 style: GoogleFonts.montserrat(
-            //                     fontSize: 12,
-            //                     fontWeight: FontWeight.w400,
-            //                     color: Colors.white),
-            //               ),
-            //               const Spacer(),
-            //               Image.asset(
-            //                 'assets/images/light_icon.png',
-            //                 height: 50,
-            //                 width: 50,
-            //               ),
-            //               const SizedBox(
-            //                 height: 50,
-            //               ),
-            //               Row(
-            //                 mainAxisAlignment: MainAxisAlignment.center,
-            //                 // crossAxisAlignment: CrossAxisAlignment.center,
-            //                 children: [
-            //                   Image.asset(
-            //                     'assets/images/refresh_icon.png',
-            //                     height: 18,
-            //                     width: 16,
-            //                   ),
-            //                   const SizedBox(
-            //                     width: 20,
-            //                   ),
-            //                   Text(
-            //                     'Lighting is less, Try Again',
-            //                     style: GoogleFonts.encodeSansExpanded(
-            //                         fontSize: 12,
-            //                         fontWeight: FontWeight.w600,
-            //                         color: Colors.white),
-            //                   ),
-            //                 ],
-            //               ),
-            //               const Spacer(),
-            //               SizedBox(
-            //                 width: 150,
-            //                 height: 50,
-            //                 child: ElevatedButton.icon(
-            //                     icon: Image.asset(
-            //                       'assets/images/refresh_icon.png',
-            //                       height: 18,
-            //                       width: 16,
-            //                     ),
-            //                     style: ElevatedButton.styleFrom(
-            //                         shape: RoundedRectangleBorder(
-            //                           borderRadius: BorderRadius.circular(15),
-            //                         ),
-            //                         backgroundColor: primaryColor,
-            //                         foregroundColor: Colors.white),
-            //                     onPressed: () {
-            //                       Navigator.pushReplacement(
-            //                               context,
-            //                               MaterialPageRoute(
-            //                                 builder: (context) => CameraScreen(),
-            //                               ))
-            //                           .whenComplete(() => CameraScreen()
-            //                               .createState()
-            //                               .build(context));
-            //                     },
-            //                     label: Text(
-            //                       'Re-Take',
-            //                       style: GoogleFonts.montserrat(
-            //                           color: Colors.white,
-            //                           fontSize: 16,
-            //                           fontWeight: FontWeight.w500),
-            //                     )),
-            //               ),
-            //               const SizedBox(
-            //                 height: 50,
-            //               )
-            //             ],
-            //           )
-            //         ],
-            //       )
-            //     :
-            Stack(
-          // fit: StackFit.expand,
-          children: [
-            SizedBox(height: double.infinity, child: CameraPreview(controller)),
-            Positioned(
-                top: 30,
-                left: 100,
-                right: 100,
-                child: Text('Please look into the camera and hold still',
-                    style: GoogleFonts.montserrat(
-                        fontSize: 12, fontWeight: FontWeight.w400))),
-            Positioned(
-              top: 80,
-              left: 30,
-              right: 30,
-              child: SizedBox(
-                // height: size.height * .4,
-                width: size.width * .85,
-                child: Image.asset(
-                  'assets/images/cam_border.png',
+    return PopScope(
+      canPop: false,
+      onPopInvoked: (didPop) {
+        Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(
+            builder: (context) => const VerifyScreen(),
+          ),
+        );
+      },
+      child: Scaffold(
+        appBar: AppBar(
+          leading: IconButton(
+            onPressed: () {
+              Navigator.pushReplacement(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => const VerifyScreen(),
                 ),
-              ),
-            ),
-            Positioned(
-              bottom: 30,
-              left: 30,
-              right: 30,
-              child: LinearProgressIndicator(
-                borderRadius: BorderRadius.circular(20),
-                value: scanProgress,
-                minHeight: 10,
-                backgroundColor: const Color.fromRGBO(255, 236, 226, 1),
-                valueColor: const AlwaysStoppedAnimation<Color>(primaryColor),
-              ),
-            ),
-            Positioned(
-              bottom: 60,
-              left: 0,
-              right: 0,
-              child: Center(
-                child: Text(
-                  '${(scanProgress * 100).toStringAsFixed(0)}% Scanning',
-                  style: const TextStyle(
-                    fontSize: 16,
-                    fontWeight: FontWeight.bold,
+              );
+            },
+            icon: const Icon(Icons.arrow_back_ios_new),
+          ),
+          title: Text(
+            'Face Verification',
+            style: GoogleFonts.encodeSansExpanded(
+                fontSize: 16, fontWeight: FontWeight.w600),
+          ),
+        ),
+        body: SizedBox(
+          height: double.infinity,
+          child:
+              // _image != null
+              //     ? Stack(
+              //         children: [
+              //           SizedBox(
+              //             height: double.infinity,
+              //             child: Transform.flip(
+              //                 flipX: true,
+              //                 child: Image.file(
+              //                   File(_image!.path),
+              //                   fit: BoxFit.cover,
+              //                 )),
+              //           ),
+              //           Container(
+              //             decoration: const BoxDecoration(
+              //                 color: Color.fromRGBO(0, 0, 0, 0.6)),
+              //             height: double.infinity,
+              //             width: double.infinity,
+              //           ),
+              //           Column(
+              //             crossAxisAlignment: CrossAxisAlignment.center,
+              //             // mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              //             children: [
+              //               const SizedBox(
+              //                 height: 35,
+              //               ),
+              //               Text(
+              //                 'Please try again with better lighting',
+              //                 style: GoogleFonts.montserrat(
+              //                     fontSize: 12,
+              //                     fontWeight: FontWeight.w400,
+              //                     color: Colors.white),
+              //               ),
+              //               const Spacer(),
+              //               Image.asset(
+              //                 'assets/images/light_icon.png',
+              //                 height: 50,
+              //                 width: 50,
+              //               ),
+              //               const SizedBox(
+              //                 height: 50,
+              //               ),
+              //               Row(
+              //                 mainAxisAlignment: MainAxisAlignment.center,
+              //                 // crossAxisAlignment: CrossAxisAlignment.center,
+              //                 children: [
+              //                   Image.asset(
+              //                     'assets/images/refresh_icon.png',
+              //                     height: 18,
+              //                     width: 16,
+              //                   ),
+              //                   const SizedBox(
+              //                     width: 20,
+              //                   ),
+              //                   Text(
+              //                     'Lighting is less, Try Again',
+              //                     style: GoogleFonts.encodeSansExpanded(
+              //                         fontSize: 12,
+              //                         fontWeight: FontWeight.w600,
+              //                         color: Colors.white),
+              //                   ),
+              //                 ],
+              //               ),
+              //               const Spacer(),
+              //               SizedBox(
+              //                 width: 150,
+              //                 height: 50,
+              //                 child: ElevatedButton.icon(
+              //                     icon: Image.asset(
+              //                       'assets/images/refresh_icon.png',
+              //                       height: 18,
+              //                       width: 16,
+              //                     ),
+              //                     style: ElevatedButton.styleFrom(
+              //                         shape: RoundedRectangleBorder(
+              //                           borderRadius: BorderRadius.circular(15),
+              //                         ),
+              //                         backgroundColor: primaryColor,
+              //                         foregroundColor: Colors.white),
+              //                     onPressed: () {
+              //                       Navigator.pushReplacement(
+              //                               context,
+              //                               MaterialPageRoute(
+              //                                 builder: (context) => CameraScreen(),
+              //                               ))
+              //                           .whenComplete(() => CameraScreen()
+              //                               .createState()
+              //                               .build(context));
+              //                     },
+              //                     label: Text(
+              //                       'Re-Take',
+              //                       style: GoogleFonts.montserrat(
+              //                           color: Colors.white,
+              //                           fontSize: 16,
+              //                           fontWeight: FontWeight.w500),
+              //                     )),
+              //               ),
+              //               const SizedBox(
+              //                 height: 50,
+              //               )
+              //             ],
+              //           )
+              //         ],
+              //       )
+              //     :
+              Stack(
+            // fit: StackFit.expand,
+            children: [
+              SizedBox(height: double.infinity, child: CameraPreview(controller)),
+              Positioned(
+                  top: 30,
+                  left: 100,
+                  right: 100,
+                  child: Text('Please look into the camera and hold still',
+                      style: GoogleFonts.montserrat(
+                          fontSize: 12, fontWeight: FontWeight.w400))),
+              Positioned(
+                top: 80,
+                left: 30,
+                right: 30,
+                child: SizedBox(
+                  // height: size.height * .4,
+                  width: size.width * .85,
+                  child: Image.asset(
+                    'assets/images/cam_border.png',
                   ),
                 ),
               ),
-            ),
-          ],
+              Positioned(
+                bottom: 30,
+                left: 30,
+                right: 30,
+                child: LinearProgressIndicator(
+                  borderRadius: BorderRadius.circular(20),
+                  value: scanProgress,
+                  minHeight: 10,
+                  backgroundColor: const Color.fromRGBO(255, 236, 226, 1),
+                  valueColor: const AlwaysStoppedAnimation<Color>(primaryColor),
+                ),
+              ),
+              Positioned(
+                bottom: 60,
+                left: 0,
+                right: 0,
+                child: Center(
+                  child: Text(
+                    '${(scanProgress * 100).toStringAsFixed(0)}% Scanning',
+                    style: const TextStyle(
+                      fontSize: 16,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                ),
+              ),
+            ],
+          ),
         ),
       ),
     );

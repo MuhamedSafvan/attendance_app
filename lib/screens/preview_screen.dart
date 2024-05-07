@@ -100,44 +100,24 @@ class _PreviewScreenState extends State<PreviewScreen> {
     return PopScope(
       canPop: false,
       onPopInvoked: (didPop) {
-        Navigator.pushAndRemoveUntil(
+        Navigator.pushReplacement(
           context,
           MaterialPageRoute(
-            builder: (context) => const VerifyScreen(),
+            builder: (context) => const CameraScreen(),
           ),
-          (route) => false,
         );
-        Navigator.push(
-            context,
-            MaterialPageRoute(
-              builder: (context) => CameraScreen(),
-            ));
       },
       child: Scaffold(
         appBar: AppBar(
           leading: IconButton(
             onPressed: () async {
-              await Navigator.pushAndRemoveUntil(
+              await Navigator.pushReplacement(
                 navigatorKey.currentState!.context,
                 MaterialPageRoute(
-                  builder: (context) => const VerifyScreen(),
+                  builder: (context) => const CameraScreen(),
                 ),
-                (route) => false,
               );
 
-              // whenComplete(() => Navigator.push(
-              //     navigatorKey.currentState!.context,
-              //     MaterialPageRoute(
-              //       builder: (context) => CameraScreen(),
-              //     )));
-              await Future.delayed(
-                Duration(milliseconds: 200),
-                () => Navigator.push(
-                    navigatorKey.currentState!.context,
-                    MaterialPageRoute(
-                      builder: (context) => CameraScreen(),
-                    )),
-              );
             },
             icon: const Icon(Icons.arrow_back_ios_new),
           ),
@@ -197,19 +177,13 @@ class _PreviewScreenState extends State<PreviewScreen> {
                                     backgroundColor: primaryColor,
                                     foregroundColor: Colors.white),
                                 onPressed: () {
-                                  Navigator.pushAndRemoveUntil(
+                                  Navigator.pushReplacement(
                                     context,
                                     MaterialPageRoute(
                                       builder: (context) =>
-                                          const VerifyScreen(),
+                                          const CameraScreen(),
                                     ),
-                                    (route) => false,
                                   );
-                                  Navigator.push(
-                                      context,
-                                      MaterialPageRoute(
-                                        builder: (context) => CameraScreen(),
-                                      ));
                                 },
                                 child: Text(
                                   'Submit',
@@ -274,7 +248,7 @@ class _PreviewScreenState extends State<PreviewScreen> {
                                     backgroundColor: Colors.white,
                                     foregroundColor: primaryColor),
                                 onPressed: () {
-                                  Navigator.push(
+                                  Navigator.pushReplacement(
                                       context,
                                       MaterialPageRoute(
                                         builder: (context) =>
@@ -393,19 +367,13 @@ class _PreviewScreenState extends State<PreviewScreen> {
                                     backgroundColor: primaryColor,
                                     foregroundColor: Colors.white),
                                 onPressed: () {
-                                  Navigator.pushAndRemoveUntil(
+                                  Navigator.pushReplacement(
                                     context,
                                     MaterialPageRoute(
                                       builder: (context) =>
-                                          const VerifyScreen(),
+                                          const CameraScreen(),
                                     ),
-                                    (route) => false,
                                   );
-                                  Navigator.push(
-                                      context,
-                                      MaterialPageRoute(
-                                        builder: (context) => CameraScreen(),
-                                      ));
                                 },
                                 label: Text(
                                   'Re-Take',
