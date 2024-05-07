@@ -1,99 +1,101 @@
-import 'dart:io';
-import 'dart:typed_data';
-import 'package:flutter/material.dart';
-import 'package:camera/camera.dart';
-import 'package:flutter_image_compress/flutter_image_compress.dart';
+// import 'dart:io';
+// import 'dart:typed_data';
+// import 'package:flutter/material.dart';
+// import 'package:camera/camera.dart';
+// import 'package:flutter_image_compress/flutter_image_compress.dart';
 
-class AttendancePage extends StatefulWidget {
-  @override
-  _AttendancePageState createState() => _AttendancePageState();
-}
+// class AttendancePage extends StatefulWidget {
+//   const AttendancePage({super.key});
 
-class _AttendancePageState extends State<AttendancePage> {
-  late CameraController _controller;
-  late Future<void> _initializeControllerFuture;
-  bool _cameraInitializied = false;
+//   @override
+//   State<AttendancePage> createState() => _AttendancePageState();
+// }
 
-  @override
-  void initState() {
-    super.initState();
+// class _AttendancePageState extends State<AttendancePage> {
+//   late CameraController _controller;
+//   late Future<void> _initializeControllerFuture;
+//   bool _cameraInitializied = false;
 
-    // Initialize the camera controller
-    _initializeCamera();
-  }
+//   @override
+//   void initState() {
+//     super.initState();
 
-  Future<void> _initializeCamera() async {
-    final cameras = await availableCameras();
-    final firstCamera = cameras.first;
+//     // Initialize the camera controller
+//     _initializeCamera();
+//   }
 
-    _controller = CameraController(
-      firstCamera,
-      ResolutionPreset.medium,
-    );
+//   Future<void> _initializeCamera() async {
+//     final cameras = await availableCameras();
+//     final firstCamera = cameras.first;
 
-    _initializeControllerFuture = _controller.initialize();
-    if (!mounted) return;
+//     _controller = CameraController(
+//       firstCamera,
+//       ResolutionPreset.medium,
+//     );
 
-    setState(() {
-      _cameraInitializied = true;
-    });
-  }
+//     _initializeControllerFuture = _controller.initialize();
+//     if (!mounted) return;
 
-  Future<void> _takePicture() async {
-    try {
-      // Ensure that the camera is initialized
-      await _initializeControllerFuture;
+//     setState(() {
+//       _cameraInitializied = true;
+//     });
+//   }
 
-      // Take the picture
-      final XFile picture = await _controller.takePicture();
+//   Future<void> _takePicture() async {
+//     try {
+//       // Ensure that the camera is initialized
+//       await _initializeControllerFuture;
 
-      // Compress the image
-      Uint8List? compressedImage = await FlutterImageCompress.compressWithFile(
-        picture.path,
-        minHeight: 640,
-        minWidth: 480,
-      );
+//       // Take the picture
+//       final XFile picture = await _controller.takePicture();
 
-      // Handle the compressed image (e.g., send it to server)
-      // You can handle the compressedImage data as per your requirement
-    } catch (e) {
-      print("Error taking picture: $e");
-    }
-  }
+//       // Compress the image
+//       Uint8List? compressedImage = await FlutterImageCompress.compressWithFile(
+//         picture.path,
+//         minHeight: 640,
+//         minWidth: 480,
+//       );
 
-  @override
-  void dispose() {
-    // Dispose of the camera controller when not in use
-    _controller.dispose();
-    super.dispose();
-  }
+//       // Handle the compressed image (e.g., send it to server)
+//       // You can handle the compressedImage data as per your requirement
+//     } catch (e) {
+//       print("Error taking picture: $e");
+//     }
+//   }
 
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: Text('Face Verification'),
-      ),
-      body: !_cameraInitializied
-          ? Center(
-              child: Text('Initializing camera...'),
-            )
-          : FutureBuilder<void>(
-              future: _initializeControllerFuture,
-              builder: (context, snapshot) {
-                if (snapshot.connectionState == ConnectionState.done) {
-                  // If the Future is complete, display the camera preview
-                  return CameraPreview(_controller);
-                } else {
-                  // Otherwise, display a loading indicator
-                  return Center(child: CircularProgressIndicator());
-                }
-              },
-            ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: _takePicture,
-        child: Icon(Icons.camera),
-      ),
-    );
-  }
-}
+//   @override
+//   void dispose() {
+//     // Dispose of the camera controller when not in use
+//     _controller.dispose();
+//     super.dispose();
+//   }
+
+//   @override
+//   Widget build(BuildContext context) {
+//     return Scaffold(
+//       appBar: AppBar(
+//         title: Text('Face Verification'),
+//       ),
+//       body: !_cameraInitializied
+//           ? Center(
+//               child: Text('Initializing camera...'),
+//             )
+//           : FutureBuilder<void>(
+//               future: _initializeControllerFuture,
+//               builder: (context, snapshot) {
+//                 if (snapshot.connectionState == ConnectionState.done) {
+//                   // If the Future is complete, display the camera preview
+//                   return CameraPreview(_controller);
+//                 } else {
+//                   // Otherwise, display a loading indicator
+//                   return Center(child: CircularProgressIndicator());
+//                 }
+//               },
+//             ),
+//       floatingActionButton: FloatingActionButton(
+//         onPressed: _takePicture,
+//         child: Icon(Icons.camera),
+//       ),
+//     );
+//   }
+// }
